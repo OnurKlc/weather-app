@@ -8,7 +8,6 @@ import { FAHRENHEIT, CELSIUS } from '../../Core/Constants/Constants'
 
 const responsive = {
 	superLargeDesktop: {
-		// the naming can be any, depends on you.
 		breakpoint: { max: 4000, min: 3000 },
 		items: 5
 	},
@@ -29,6 +28,7 @@ const responsive = {
 export default function MainPage() {
 	const [scaleValue, setScaleValue] = useState(CELSIUS)
 	const [renderData, setRenderData] = useState()
+	const [selectedDate, setSelectedDate] = useState(0)
 	const { weatherData } = useContext(Context)
 
 	const handleScaleChange = (event, val) => {
@@ -59,6 +59,10 @@ export default function MainPage() {
 		return totalArr
 	}
 
+	const arrowClicked = (index, data) => {
+		setSelectedDate(data.currentSlide)
+	}
+
 	useEffect(() => {
 		const listData = [...weatherData.list]
 		const _renderData = formatWeatherData(listData)
@@ -77,9 +81,11 @@ export default function MainPage() {
 				</FormControl>
 			</div>
 			{renderData && (
-				<Carousel responsive={responsive}>
-					{renderData.map((item) => (
-						<WeatherCard data={item} scale={scaleValue} />
+				<Carousel responsive={responsive} afterChange={arrowClicked}>
+					{renderData.map((item, index) => (
+						<div key={item.day} onClick={() => setSelectedDate(index)}>
+							<WeatherCard data={item} scale={scaleValue} activeCard={index === selectedDate} />
+						</div>
 					))}
 				</Carousel>
 			)}

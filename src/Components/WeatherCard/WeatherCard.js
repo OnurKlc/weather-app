@@ -5,14 +5,13 @@ import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import { FAHRENHEIT } from '../../Core/Constants/Constants'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(() => ({
 	root: {
-		width: 275
+		width: 275,
+		cursor: 'pointer'
 	},
-	bullet: {
-		display: 'inline-block',
-		margin: '0 2px',
-		transform: 'scale(0.8)'
+	active: {
+		boxShadow: '0px 0px 7px 5px rgba(245,0,87,0.6)'
 	},
 	title: {
 		fontSize: 14
@@ -20,13 +19,13 @@ const useStyles = makeStyles({
 	pos: {
 		marginBottom: 12
 	}
-})
+}))
 
-export default function WeatherCard({ data, scale }) {
+export default function WeatherCard({ data, scale, activeCard }) {
 	const classes = useStyles()
 
 	return (
-		<Card className={classes.root} variant="outlined">
+		<Card className={classes.root + ' ' + (activeCard ? classes.active : null)} variant="outlined">
 			<CardContent>
 				<Typography>{data.day}</Typography>
 				<Typography variant="h6" component="h2">
