@@ -6,12 +6,11 @@ function ErrorPopup() {
 	const ctx = useContext(Context)
 
 	return (
-		<Dialog open aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+		<Dialog open={true} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
 			<DialogTitle id="alert-dialog-title">Error</DialogTitle>
 			<DialogContent>
 				<DialogContentText id="alert-dialog-description">
-					A network error occured and weather data could not be fetched. If you are using the browser with web security
-					enabled, you should disable the web security to bypass CORS error.
+					A network error occured and weather data could not be fetched.
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>

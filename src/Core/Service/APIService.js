@@ -13,8 +13,7 @@ function getWeatherData() {
 			cnt: 40,
 			units: 'imperial'
 		},
-		method: 'GET',
-		withCredentials: true
+		method: 'GET'
 	})
 		.then((res) => {
 			return res.data
