@@ -40,6 +40,12 @@ function App() {
 						<CircularProgress />
 					</span>
 				)}
+				<div id="preload">
+					<img src={images.rainImg} alt="" />
+					<img src={images.snowImg} alt="" />
+					<img src={images.clearImg} alt="" />
+					<img src={images.cloudImg} alt="" />
+				</div>
 			</Container>
 		</div>
 	)
