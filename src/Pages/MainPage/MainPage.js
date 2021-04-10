@@ -31,7 +31,7 @@ export default function MainPage() {
 	const [renderData, setRenderData] = useState()
 	const [selectedDate, setSelectedDate] = useState(0)
 	const [barData, setBarData] = useState([])
-	const { weatherData } = useContext(Context)
+	const { weatherData, setBackground } = useContext(Context)
 
 	const handleScaleChange = (event, val) => {
 		setScaleValue(val)
@@ -83,7 +83,8 @@ export default function MainPage() {
 				let obj = {
 					Date: item.dt_txt.substr(0, 10),
 					Time: item.dt_txt.substr(10, 6) + ' AM',
-					Degree: scaleValue === FAHRENHEIT ? Math.round(item.main.temp) : Math.round((item.main.temp - 32) / 1.8)
+					Degree: scaleValue === FAHRENHEIT ? Math.round(item.main.temp) : Math.round((item.main.temp - 32) / 1.8),
+					Weather: item.weather[0].main
 				}
 				_barData.push(obj)
 			})
@@ -124,22 +125,30 @@ export default function MainPage() {
 					))}
 				</Carousel>
 			)}
-			<ResponsiveContainer width="100%" height={220}>
-				{barData && (
-					<BarChart
-						width={730}
-						height={250}
-						data={barData}
-						barSize={90}
-						margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-					>
-						<XAxis dataKey="Time" />
-						<YAxis dataKey="Degree" />
-						<Tooltip content={<CustomTooltip />} />
-						<Bar dataKey="Degree" fill="#82ca9d" barGap={2} />
-					</BarChart>
-				)}
-			</ResponsiveContainer>
+			<div onMouseLeave={() => setBackground('default')}>
+				<ResponsiveContainer width="100%" height={220}>
+					{barData && (
+						<BarChart
+							width={730}
+							height={250}
+							data={barData}
+							barSize={90}
+							margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+							onMouseEnter={(val) => setBackground(val.activePayload[0].payload.Weather)}
+						>
+							<XAxis dataKey="Time" />
+							<YAxis dataKey="Degree" />
+							<Tooltip content={<CustomTooltip />} />
+							<Bar
+								dataKey="Degree"
+								fill="#82ca9d"
+								minPointSize={3}
+								onMouseEnter={(val) => setBackground(val.Weather)}
+							/>
+						</BarChart>
+					)}
+				</ResponsiveContainer>
+			</div>
 		</main>
 	)
 }

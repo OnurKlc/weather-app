@@ -7,6 +7,7 @@ export function ContextProvider({ children }) {
 	const [weatherData, setWeatherData] = useState()
 	const [ready, setReady] = useState(false)
 	const [errorPopup, setErrorPopup] = useState(false)
+	const [background, setBackground] = useState('default')
 
 	const getWeatherData = () => {
 		APIService.getWeatherData()
@@ -30,7 +31,9 @@ export function ContextProvider({ children }) {
 				setWeatherData,
 				errorPopup,
 				setErrorPopup,
-				ready
+				ready,
+				background,
+				setBackground
 			}}
 		>
 			{children}
