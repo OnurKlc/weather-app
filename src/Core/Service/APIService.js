@@ -10,7 +10,8 @@ function getWeatherData() {
 		params: {
 			q: 'Ankara,tr',
 			APPID: process.env.REACT_APP_API_KEY,
-			cnt: 40
+			cnt: 40,
+			units: 'imperial'
 		},
 		method: 'GET',
 		withCredentials: true

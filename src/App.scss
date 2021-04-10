@@ -1,3 +1,5 @@
+@import "Assets/style/variables";
+
 body, html {
   padding: 0;
   margin: 0;
@@ -10,9 +12,21 @@ body, html {
   max-width: 100vw;
   min-width: 100vw;
   overflow: hidden;
-  background: url("./Assets/weather_bg.jpeg");
+  background: url("Assets/images/weather_bg.jpeg");
   background-size: cover;
   background-position: center;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: $TABLET) {
+    overflow-y: auto;
+  }
+}
+
+.MuiContainer-root {
+  display: flex !important;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .spinner {

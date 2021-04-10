@@ -5,23 +5,23 @@ import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recha
 import { Context } from '../../Core/Context/Context'
 import WeatherCard from '../../Components/WeatherCard/WeatherCard'
 import './MainPage.scss'
-import { FAHRENHEIT, CELSIUS } from '../../Core/Constants/Constants'
+import { FAHRENHEIT, CELSIUS, RESPONSIVE } from '../../Core/Constants/Constants'
 
 const responsive = {
 	superLargeDesktop: {
-		breakpoint: { max: 4000, min: 3000 },
+		breakpoint: { max: 4000, min: RESPONSIVE.SUPERLARGEDESKTOP },
 		items: 5
 	},
 	desktop: {
-		breakpoint: { max: 3000, min: 1024 },
+		breakpoint: { max: RESPONSIVE.SUPERLARGEDESKTOP, min: RESPONSIVE.DESKTOP },
 		items: 3
 	},
 	tablet: {
-		breakpoint: { max: 1024, min: 464 },
+		breakpoint: { max: RESPONSIVE.DESKTOP, min: RESPONSIVE.TABLET },
 		items: 2
 	},
 	mobile: {
-		breakpoint: { max: 464, min: 0 },
+		breakpoint: { max: RESPONSIVE.TABLET, min: 0 },
 		items: 1
 	}
 }
@@ -50,7 +50,7 @@ export default function MainPage() {
 				const tempArr = [...arr]
 				const obj = {
 					data: tempArr,
-					average: Math.round(totalTemp / tempArr.length - 273),
+					average: Math.round(totalTemp / tempArr.length),
 					day: previousDay
 				}
 				totalArr.push(obj)
@@ -83,8 +83,7 @@ export default function MainPage() {
 				let obj = {
 					Date: item.dt_txt.substr(0, 10),
 					Time: item.dt_txt.substr(10, 6) + ' AM',
-					Degree:
-						scaleValue === FAHRENHEIT ? Math.round(item.main.temp - 273) : Math.round((item.main.temp - 251) / 1.8)
+					Degree: scaleValue === FAHRENHEIT ? Math.round(item.main.temp) : Math.round((item.main.temp - 32) / 1.8)
 				}
 				_barData.push(obj)
 			})
@@ -127,7 +126,13 @@ export default function MainPage() {
 			)}
 			<ResponsiveContainer width="100%" height={220}>
 				{barData && (
-					<BarChart width={730} height={250} data={barData} barSize={90} barGap={2}>
+					<BarChart
+						width={730}
+						height={250}
+						data={barData}
+						barSize={90}
+						margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+					>
 						<XAxis dataKey="Time" />
 						<YAxis dataKey="Degree" />
 						<Tooltip content={<CustomTooltip />} />

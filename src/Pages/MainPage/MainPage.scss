@@ -1,6 +1,17 @@
+@import "../../Assets/style/variables";
+
 #main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-around;
+
   .radio-button-area {
     margin-top: 100px;
+
+    @media (max-width: $TABLET) {
+      margin-top: 20px;
+    }
   }
 
   .MuiFormControl-root {
@@ -15,10 +26,29 @@
 
   .react-multi-carousel-list {
     height: 400px;
+  }
+
+  .react-multi-carousel-item > div {
     padding: 0 10px;
+    display: flex;
+    justify-content: center;
   }
 
   .react-multiple-carousel__arrow {
     top: 50px;
+  }
+
+  @media (max-width: $TABLET) {
+    .radio-button-area {
+      margin-top: 20px;
+    }
+
+    .react-multi-carousel-list {
+      height: 320px;
+    }
+
+    .recharts-wrapper {
+      transform: translateX(-20px);
+    }
   }
 }
