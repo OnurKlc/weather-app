@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import { useContext, useEffect } from 'react'
+import { Context } from './Core/Context/Context'
+import './App.scss'
+import ErrorPopup from './Components/ErrorPopup/ErrorPopup'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const ctx = useContext(Context)
+
+	useEffect(() => {
+		console.log(ctx)
+	}, [])
+	return (
+		<>
+			{ctx.errorPopup && <ErrorPopup />}
+			{ctx.ready && <div className="App">asd</div>}
+		</>
+	)
 }
 
-export default App;
+export default App
