@@ -87,6 +87,7 @@ export default function MainPage() {
 					Weather: item.weather[0].main
 				}
 				_barData.push(obj)
+				return true
 			})
 			setBarData(_barData)
 		}
