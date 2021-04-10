@@ -7,7 +7,7 @@ import { FAHRENHEIT } from '../../Core/Constants/Constants'
 
 const useStyles = makeStyles(() => ({
 	root: {
-		width: 275,
+		width: 290,
 		cursor: 'pointer'
 	},
 	active: {
@@ -29,7 +29,8 @@ export default function WeatherCard({ data, scale, activeCard }) {
 			<CardContent>
 				<Typography>{data.day}</Typography>
 				<Typography variant="h6" component="h2">
-					Temperature: {scale === FAHRENHEIT ? data.average + ' F' : Math.round((data.average - 32) / 1.8) + ' C'}
+					Temperature: {scale === FAHRENHEIT ? data.average : Math.round((data.average + 32) / 1.8)} &deg;{' '}
+					{scale === FAHRENHEIT ? 'F' : 'C'}
 				</Typography>
 			</CardContent>
 		</Card>

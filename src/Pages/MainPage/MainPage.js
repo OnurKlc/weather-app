@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core'
 import Carousel from 'react-multi-carousel'
+import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
 import { Context } from '../../Core/Context/Context'
 import WeatherCard from '../../Components/WeatherCard/WeatherCard'
 import './MainPage.scss'
@@ -29,6 +30,7 @@ export default function MainPage() {
 	const [scaleValue, setScaleValue] = useState(CELSIUS)
 	const [renderData, setRenderData] = useState()
 	const [selectedDate, setSelectedDate] = useState(0)
+	const [barData, setBarData] = useState([])
 	const { weatherData } = useContext(Context)
 
 	const handleScaleChange = (event, val) => {
@@ -48,7 +50,7 @@ export default function MainPage() {
 				const tempArr = [...arr]
 				const obj = {
 					data: tempArr,
-					average: Math.round(totalTemp / tempArr.length - 273.15),
+					average: Math.round(totalTemp / tempArr.length - 273),
 					day: previousDay
 				}
 				totalArr.push(obj)
@@ -59,8 +61,12 @@ export default function MainPage() {
 		return totalArr
 	}
 
-	const arrowClicked = (index, data) => {
-		setSelectedDate(data.currentSlide)
+	const onCarouselChange = (index, data) => {
+		if (data.currentSlide > index) {
+			setSelectedDate(selectedDate + 1)
+		} else {
+			setSelectedDate(selectedDate - 1)
+		}
 	}
 
 	useEffect(() => {
@@ -69,6 +75,36 @@ export default function MainPage() {
 		setRenderData(_renderData)
 		console.log(_renderData)
 	}, [weatherData])
+
+	useEffect(() => {
+		if (renderData) {
+			const _barData = []
+			renderData[selectedDate].data.map((item) => {
+				let obj = {
+					Date: item.dt_txt.substr(0, 10),
+					Time: item.dt_txt.substr(10, 6) + ' AM',
+					Degree:
+						scaleValue === FAHRENHEIT ? Math.round(item.main.temp - 273) : Math.round((item.main.temp - 251) / 1.8)
+				}
+				_barData.push(obj)
+			})
+			setBarData(_barData)
+		}
+	}, [selectedDate, renderData, scaleValue])
+
+	function CustomTooltip({ payload, label, active }) {
+		if (active) {
+			return (
+				<div className="custom-tooltip">
+					<p style={{ color: 'rgb(102, 102, 102)' }}>
+						{payload[0].value} &deg; {scaleValue === FAHRENHEIT ? ' F' : ' C'}
+					</p>
+				</div>
+			)
+		}
+
+		return null
+	}
 
 	return (
 		<main id="main">
@@ -81,7 +117,7 @@ export default function MainPage() {
 				</FormControl>
 			</div>
 			{renderData && (
-				<Carousel responsive={responsive} afterChange={arrowClicked}>
+				<Carousel responsive={responsive} afterChange={onCarouselChange}>
 					{renderData.map((item, index) => (
 						<div key={item.day} onClick={() => setSelectedDate(index)}>
 							<WeatherCard data={item} scale={scaleValue} activeCard={index === selectedDate} />
@@ -89,6 +125,16 @@ export default function MainPage() {
 					))}
 				</Carousel>
 			)}
+			<ResponsiveContainer width="100%" height={220}>
+				{barData && (
+					<BarChart width={730} height={250} data={barData} barSize={90} barGap={2}>
+						<XAxis dataKey="Time" />
+						<YAxis dataKey="Degree" />
+						<Tooltip content={<CustomTooltip />} />
+						<Bar dataKey="Degree" fill="#82ca9d" barGap={2} />
+					</BarChart>
+				)}
+			</ResponsiveContainer>
 		</main>
 	)
 }
