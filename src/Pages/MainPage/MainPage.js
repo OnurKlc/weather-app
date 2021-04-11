@@ -156,6 +156,7 @@ export default function MainPage() {
 								fill="#82ca9d"
 								minPointSize={3}
 								onMouseEnter={(val) => setBackground(val.Weather)}
+								onTouchStart={(val) => setBackground(val.Weather)}
 							/>
 						</BarChart>
 					</ResponsiveContainer>
