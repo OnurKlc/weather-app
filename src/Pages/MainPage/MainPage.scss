@@ -46,6 +46,12 @@
     display: none;
   }
 
+  .custom-tooltip {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+  }
+
   @media (max-width: $TABLET) {
     .radio-button-area {
       margin-top: 20px;

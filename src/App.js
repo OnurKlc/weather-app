@@ -36,7 +36,7 @@ function App() {
 				{errorPopup && <ErrorPopup />}
 				{ready && <MainPage />}
 				{!ready && !errorPopup && (
-					<span className="spinner">
+					<span className="spinner" data-testid="spinner">
 						<CircularProgress />
 					</span>
 				)}

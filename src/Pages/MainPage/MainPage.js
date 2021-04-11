@@ -7,6 +7,7 @@ import WeatherCard from '../../Components/WeatherCard/WeatherCard'
 import './MainPage.scss'
 import { FAHRENHEIT, CELSIUS, RESPONSIVE } from '../../Core/Constants/Constants'
 
+// Carousel responsive behaviour
 const responsive = {
 	superLargeDesktop: {
 		breakpoint: { max: 4000, min: RESPONSIVE.SUPERLARGEDESKTOP },
@@ -37,7 +38,8 @@ export default function MainPage() {
 		setScaleValue(val)
 	}
 
-	const formatWeatherData = (data) => {
+	// Transform API data to be compatible with what is rendered. Calculate average temp for each day.
+	const weatherDataAdapter = (data) => {
 		let arr = []
 		let totalArr = []
 		let totalTemp = 0
@@ -61,6 +63,7 @@ export default function MainPage() {
 		return totalArr
 	}
 
+	// Change active card on carousel change
 	const onCarouselChange = (index, data) => {
 		if (data.currentSlide > index) {
 			setSelectedDate(selectedDate + 1)
@@ -69,13 +72,16 @@ export default function MainPage() {
 		}
 	}
 
+	// Set transformed API data to state for render
 	useEffect(() => {
-		const listData = [...weatherData.list]
-		const _renderData = formatWeatherData(listData)
-		setRenderData(_renderData)
-		console.log(_renderData)
+		if (weatherData) {
+			const weatherDataCopy = [...weatherData.list]
+			const _renderData = weatherDataAdapter(weatherDataCopy)
+			setRenderData(_renderData)
+		}
 	}, [weatherData])
 
+	// This hook formats the necessary data for BarChart from the renderData state
 	useEffect(() => {
 		if (renderData) {
 			const _barData = []
@@ -97,18 +103,19 @@ export default function MainPage() {
 		if (active) {
 			return (
 				<div className="custom-tooltip">
-					<p style={{ color: 'rgb(102, 102, 102)' }}>
+					<div style={{ color: 'rgb(102, 102, 102)' }}>
 						{payload[0].value} &deg; {scaleValue === FAHRENHEIT ? ' F' : ' C'}
-					</p>
+					</div>
+					<div style={{ color: 'rgb(102, 102, 102)' }}>{payload[0].payload.Weather}</div>
 				</div>
 			)
 		}
-
 		return null
 	}
 
 	return (
-		<main id="main">
+		<main id="main" data-testid="main">
+			{/*Checkbox area*/}
 			<div className="radio-button-area">
 				<FormControl component="fieldset">
 					<RadioGroup aria-label="Degree Scale" name="scale" value={scaleValue} onChange={handleScaleChange}>
@@ -117,18 +124,22 @@ export default function MainPage() {
 					</RadioGroup>
 				</FormControl>
 			</div>
+
+			{/*Card area*/}
 			{renderData && (
 				<Carousel responsive={responsive} afterChange={onCarouselChange}>
 					{renderData.map((item, index) => (
-						<div key={item.day} onClick={() => setSelectedDate(index)}>
+						<div key={item.day} onClick={() => setSelectedDate(index)} data-testid="weather-card">
 							<WeatherCard data={item} scale={scaleValue} activeCard={index === selectedDate} />
 						</div>
 					))}
 				</Carousel>
 			)}
-			<div onMouseLeave={() => setBackground('default')}>
-				<ResponsiveContainer width="100%" height={220}>
-					{barData && (
+
+			{/*Chart area*/}
+			{barData && (
+				<div onMouseLeave={() => setBackground('default')} data-testid="bar-chart-area">
+					<ResponsiveContainer width="100%" height={220}>
 						<BarChart
 							width={730}
 							height={250}
@@ -147,9 +158,9 @@ export default function MainPage() {
 								onMouseEnter={(val) => setBackground(val.Weather)}
 							/>
 						</BarChart>
-					)}
-				</ResponsiveContainer>
-			</div>
+					</ResponsiveContainer>
+				</div>
+			)}
 		</main>
 	)
 }
