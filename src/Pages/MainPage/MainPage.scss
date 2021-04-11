@@ -42,6 +42,10 @@
     top: 50px;
   }
 
+  .recharts-tooltip-cursor {
+    display: none;
+  }
+
   @media (max-width: $TABLET) {
     .radio-button-area {
       margin-top: 20px;
